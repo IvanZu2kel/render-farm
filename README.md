@@ -8,4 +8,6 @@
 
 Для запуска потребуется предустановленная MySQL бд, в application.properties замените логин и пароль на ваши. 
 
+Доступ к документации по http://localhost:8080/swagger-ui/index.html#/ после запуска на порту 8080.
+
 <img width="1419" alt="Снимок экрана 2022-03-03 в 15 51 44" src="https://user-images.githubusercontent.com/85585191/156568277-8513bdef-4ef6-4593-91c5-a491b374f538.png">
