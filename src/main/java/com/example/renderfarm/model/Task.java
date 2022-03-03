@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Setter
@@ -22,7 +21,4 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "person_id")
     private Person person;
-
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
-    private List<History> history;
 }
