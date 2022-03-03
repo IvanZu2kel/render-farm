@@ -13,9 +13,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("select t from tasks t where t.person.email = :email")
     List<Task> findAllByPersonEmail(String email);
 
-    @Query("select t from tasks t where t.status = 'RENDERING'")
-    List<Task> findAllByStatusRendering();
-
     @Query("select h from history h where h.task.id = :id")
     List<History> getByTaskId(long id);
 }

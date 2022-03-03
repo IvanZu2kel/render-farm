@@ -18,7 +18,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ForkJoinPool;
 
 @Service
 @EnableScheduling
@@ -97,13 +96,15 @@ public class TaskService {
      */
     @Scheduled(fixedDelay = 5_000)
     private void startWorkingTask() {
-        ForkJoinPool forkJoinPool = new ForkJoinPool();
-        List<Task> tasks = taskRepository.findAllByStatusRendering();
-        Runnable r = () -> {
-            for (Task task : tasks) {
-                task.setStatus(Status.IN_PROCESS);
-                taskRepository.save(task);
-                createHistory(task, Status.IN_PROCESS);
+        List<Task> allTasks = taskRepository.findAll();
+        List<Task> tasks = allTasks.stream().filter(t -> !t.getStatus().equals(Status.COMPLETE)).toList();
+        if (tasks.size() > 0) {
+            tasks.parallelStream().forEach(task -> {
+                if (!task.getStatus().equals(Status.IN_PROCESS)) {
+                    task.setStatus(Status.IN_PROCESS);
+                    taskRepository.save(task);
+                    createHistory(task, Status.IN_PROCESS);
+                }
                 try {
                     Thread.sleep(60_000 + (long) (Math.random() * 240_000));
                     task.setStatus(Status.COMPLETE);
@@ -112,9 +113,8 @@ public class TaskService {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
-        };
-        forkJoinPool.submit(r);
+            });
+        }
     }
 
     private void createHistory(Task task, Status status) {
