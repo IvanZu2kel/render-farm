@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@EnableScheduling
 @RequiredArgsConstructor
 public class TaskService {
     private final PersonRepository personRepository;
